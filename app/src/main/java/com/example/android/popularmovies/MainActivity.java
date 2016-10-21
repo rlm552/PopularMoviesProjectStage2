@@ -3,8 +3,10 @@ package com.example.android.popularmovies;
 import android.app.AlertDialog;
 import android.app.DialogFragment;
 import android.app.FragmentManager;
+import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
@@ -20,6 +22,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
+import android.widget.CheckBox;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ScrollView;
@@ -46,9 +49,12 @@ import java.util.List;
 import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
+    private static final String STATE_OPTION = "option";
+
+    private int mCounter;
     // String value selected from options menu
     // Initialized to "popular" in onStart method
-    private String mOptionSelected;
+    private String mOptionSelected = "popular";
     GridView gridView;
 
     static Movie[] objects = new Movie[0];
@@ -60,12 +66,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
 
-        //Default option
-        mOptionSelected = "popular";
-
-        gridView = (GridView) findViewById(R.id.gridView1);
+       gridView = (GridView) findViewById(R.id.gridView1);
 
         gridView.setAdapter(imageAdapter);
 
@@ -83,6 +87,17 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // If we have a saved state then we can restore it now
+        if (savedInstanceState != null) {
+            mOptionSelected = savedInstanceState.getString(STATE_OPTION, "popular");
+        }
+
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(STATE_OPTION, mOptionSelected);
     }
 
     public boolean isOnline() {
@@ -114,13 +129,13 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main, menu);
+
         return true;
     }
 
     public void FetchMovies(){
         FetchMoviesTask moviesTask = new FetchMoviesTask();
         moviesTask.execute();
-        gridView.smoothScrollToPosition(1);
     }
 
     @Override
@@ -132,12 +147,14 @@ public class MainActivity extends AppCompatActivity {
                 else item.setChecked(true);
                 mOptionSelected = "top_rated";
                 FetchMovies();
+                gridView.smoothScrollToPosition(1);
                 return true;
-            case R.id.most_popular:
+            case R.id.popular:
                 if (item.isChecked()) item.setChecked(false);
                 else item.setChecked(true);
                 mOptionSelected = "popular";
                 FetchMovies();
+                gridView.smoothScrollToPosition(1);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
