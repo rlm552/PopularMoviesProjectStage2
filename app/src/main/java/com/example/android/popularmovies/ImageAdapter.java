@@ -11,6 +11,8 @@ import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
 
+import java.util.List;
+
 /**
  * Created by Rory on 9/14/2016.
  */
@@ -19,15 +21,17 @@ public class ImageAdapter extends BaseAdapter
     private final String LOG_TAG = ImageAdapter.class.getSimpleName();
 
     private Context context;
+    private List <Movie> movieObjects;
 
-    public ImageAdapter(Context c)
+    public ImageAdapter(Context c, List <Movie> m)
     {
         context = c;
+        movieObjects = m;
     }
 
     //---returns the number of images---
     public int getCount() {
-        return MainActivity.movieObjects.size();
+        return movieObjects.size();
     }
 
     //---returns the ID of an item---
@@ -58,8 +62,8 @@ public class ImageAdapter extends BaseAdapter
         }
 
         // Only loads images if object exists
-        if(MainActivity.movieObjects.get(position) != null) {
-            Picasso.with(context).load("http://image.tmdb.org/t/p/w185/" + MainActivity.movieObjects.get(position).posterPath).into(imageView);
+        if(movieObjects.get(position) != null) {
+            Picasso.with(context).load("http://image.tmdb.org/t/p/w185/" + movieObjects.get(position).posterPath).into(imageView);
         }
         return imageView;
     }
