@@ -15,6 +15,9 @@ public class TestUriMatcher extends AndroidTestCase {
     // content://com.example.android.popularmovies/reviews/*
     private static final Uri TEST_REVIEWS_DIR = Contracts.ReviewsEntry.CONTENT_URI;
 
+    // content://com.example.android.popularmovies/favorites/*
+    private static final Uri TEST_FAVORITES_DIR = Contracts.FavoritesEntry.CONTENT_URI;
+
     /*
         This function tests that your UriMatcher returns the correct integer value
         for each of the Uri types that our ContentProvider can handle.
@@ -28,6 +31,10 @@ public class TestUriMatcher extends AndroidTestCase {
 
         assertEquals("Error: The Reviews URI was matched incorrectly.",
                 testMatcher.match(TEST_REVIEWS_DIR), Provider.REVIEWS);
+
+        assertEquals("Error: The Favorites URI was matched incorrectly.",
+                testMatcher.match(TEST_FAVORITES_DIR), Provider.FAVORITES);
+
     }
 
 }

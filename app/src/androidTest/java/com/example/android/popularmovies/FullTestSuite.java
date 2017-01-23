@@ -11,7 +11,7 @@ public class FullTestSuite extends TestSuite {
                 .includeAllPackagesUnderHere().build();
     }
 
-    public FullTestSuite() {
+    private FullTestSuite() {
         super();
     }
 }

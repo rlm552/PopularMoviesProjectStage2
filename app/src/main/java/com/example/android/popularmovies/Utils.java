@@ -5,12 +5,14 @@ import android.view.ViewGroup;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
+import java.io.IOException;
+
 /**
  * Created by Rory on 12/18/2016.
  *
- * Code from url: http://www.java2s.com/Code/Android/UI/setListViewHeightBasedOnChildren.htm
+ * etListViewHeightBasedOnChildren Code from url: http://www.java2s.com/Code/Android/UI/setListViewHeightBasedOnChildren.htm
  */
-public class Utils {
+class Utils {
 
     public static void setListViewHeightBasedOnChildren(ListView listView) {
         ListAdapter listAdapter = listView.getAdapter();
@@ -30,5 +32,20 @@ public class Utils {
         params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
         listView.setLayoutParams(params);
         listView.requestLayout();
+    }
+
+    public static boolean isOnline() {
+
+        Runtime runtime = Runtime.getRuntime();
+        try {
+
+            Process ipProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8");
+            int     exitValue = ipProcess.waitFor();
+            return (exitValue == 0);
+
+        } catch (IOException e)          { e.printStackTrace(); }
+        catch (InterruptedException e) { e.printStackTrace(); }
+
+        return false;
     }
 }

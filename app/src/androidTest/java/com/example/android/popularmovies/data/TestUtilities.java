@@ -1,29 +1,24 @@
 package com.example.android.popularmovies.data;
 
 import android.content.ContentValues;
-import android.content.Context;
 import android.database.ContentObserver;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.test.AndroidTestCase;
-
-import com.example.android.popularmovies.DetailActivity;
 import com.example.android.popularmovies.utils.PollingCheck;
-
 import java.util.Map;
 import java.util.Set;
 
 public class TestUtilities extends AndroidTestCase{
 
-    static final String TEST_MOVIE_ID = "fljslfj2";
-    static final String TEST_FAVORITE = "Magical Emporium of Professor Blunderbuss";
-    static final String TEST_POSTER_PATH = "f445sffd";
-    static final String TEST_OVERVIEW = "A cool movie";
-    static final String TEST_VOTE_AVERAGE = "6.9";
-    static final String TEST_RELEASE_DATE = "2015";
+    private static final int TEST_MOVIE_ID = 32323;
+    private static final String TEST_FAVORITE = "Magical Emporium of Professor Blunderbuss";
+    private static final String TEST_POSTER_PATH = "f445sffd";
+    private static final String TEST_OVERVIEW = "A cool movie";
+    private static final String TEST_VOTE_AVERAGE = "6.9";
+    private static final String TEST_RELEASE_DATE = "2015";
 
     static void validateCursor(String error, Cursor valueCursor, ContentValues expectedValues) {
         assertTrue("Empty cursor returned. " + error, valueCursor.moveToFirst());
@@ -47,12 +42,12 @@ public class TestUtilities extends AndroidTestCase{
     static ContentValues createFavoritesValues() {
         // Create a new favorite values, where column names are the keys
         ContentValues testValues = new ContentValues();
-        testValues.put(FavoritesContract.FavoritesEntry.COLUMN_MOVIE_ID, TEST_MOVIE_ID);
-        testValues.put(FavoritesContract.FavoritesEntry.COLUMN_TITLE, TEST_FAVORITE);
-        testValues.put(FavoritesContract.FavoritesEntry.COLUMN_POSTER_PATH, TEST_POSTER_PATH);
-        testValues.put(FavoritesContract.FavoritesEntry.COLUMN_OVERVIEW, TEST_OVERVIEW);
-        testValues.put(FavoritesContract.FavoritesEntry.COLUMN_VOTE_AVERAGE, TEST_VOTE_AVERAGE);
-        testValues.put(FavoritesContract.FavoritesEntry.COLUMN_RELEASE_DATE, TEST_RELEASE_DATE);
+        testValues.put(Contracts.FavoritesEntry.COLUMN_MOVIE_ID, TEST_MOVIE_ID);
+        testValues.put(Contracts.FavoritesEntry.COLUMN_TITLE, TEST_FAVORITE);
+        testValues.put(Contracts.FavoritesEntry.COLUMN_POSTER_PATH, TEST_POSTER_PATH);
+        testValues.put(Contracts.FavoritesEntry.COLUMN_OVERVIEW, TEST_OVERVIEW);
+        testValues.put(Contracts.FavoritesEntry.COLUMN_VOTE_AVERAGE, TEST_VOTE_AVERAGE);
+        testValues.put(Contracts.FavoritesEntry.COLUMN_RELEASE_DATE, TEST_RELEASE_DATE);
 
         return testValues;
     }

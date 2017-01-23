@@ -16,7 +16,7 @@ import android.util.Log;
  */
 public class TestTrailersProvider extends AndroidTestCase {
 
-    public static final String LOG_TAG = TestTrailersProvider.class.getSimpleName();
+    private static final String LOG_TAG = TestTrailersProvider.class.getSimpleName();
 
     /*
        This helper function deletes all records from both database tables using the ContentProvider.
@@ -27,7 +27,7 @@ public class TestTrailersProvider extends AndroidTestCase {
        the delete functionality in the ContentProvider.
      */
 
-    public void deleteAllRecordsFromProvider(){
+    private void deleteAllRecordsFromProvider(){
         int rowsDeleted = mContext.getContentResolver().delete(
                 Contracts.TrailersEntry.CONTENT_URI,
                 null,
@@ -46,7 +46,7 @@ public class TestTrailersProvider extends AndroidTestCase {
         cursor.close();
     }
 
-    public void deleteAllRecords() {
+    private void deleteAllRecords() {
         deleteAllRecordsFromProvider();
     }
 
@@ -174,10 +174,12 @@ public class TestTrailersProvider extends AndroidTestCase {
         TestUtilities.validateCursor("testUpdateTrailers.  Error validating trailers entry update.",
                 cursor, updatedValues);
 
+        deleteAllRecords();
+
         cursor.close();
     }
 
-    public void testInsertReadProvider() {
+    private void testInsertReadProvider() {
         ContentValues testValues = TestUtilities.createTrailerValues();
 
         // Register a content observer for our insert.  This time, directly with the content resolver

@@ -8,6 +8,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 /**
@@ -21,9 +22,11 @@ public class Provider extends ContentProvider {
 
     static final int TRAILERS = 100;
     static final int REVIEWS = 200;
+    static final int FAVORITES = 300;
 
     private static final SQLiteQueryBuilder sTrailersQueryBuilder;
     private static final SQLiteQueryBuilder sReviewsQueryBuilder;
+    private static final SQLiteQueryBuilder sFavoritesQueryBuilder;
 
     static{
         sTrailersQueryBuilder = new SQLiteQueryBuilder();
@@ -35,6 +38,11 @@ public class Provider extends ContentProvider {
         sReviewsQueryBuilder.setTables(Contracts.ReviewsEntry.TABLE_NAME);
     }
 
+    static{
+        sFavoritesQueryBuilder = new SQLiteQueryBuilder();
+        sFavoritesQueryBuilder.setTables(Contracts.FavoritesEntry.TABLE_NAME);
+    }
+
     //Trailers.trailers_setting = ?
     private static final String sTrailersSelection =
             Contracts.TrailersEntry.TABLE_NAME+
@@ -43,6 +51,11 @@ public class Provider extends ContentProvider {
     private static final String sReviewsSelection =
             Contracts.ReviewsEntry.TABLE_NAME+
                     "." + Contracts.ReviewsEntry.COLUMN_REVIEW + " = ? ";
+
+    private static final String sFavoritesSelection =
+            Contracts.FavoritesEntry.TABLE_NAME+
+                    "." + Contracts.FavoritesEntry.COLUMN_MOVIE_ID + " = ? ";
+
 
 
     private Cursor getTrailer(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
@@ -69,6 +82,17 @@ public class Provider extends ContentProvider {
         );
     }
 
+    private Cursor getFavorite(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
+
+        return sFavoritesQueryBuilder.query(mOpenHelper.getReadableDatabase(),
+                projection,
+                selection,
+                selectionArgs,
+                null,
+                null,
+                sortOrder
+        );
+    }
 
     static UriMatcher buildUriMatcher() {
 
@@ -81,6 +105,7 @@ public class Provider extends ContentProvider {
         // For each type of URI you want to add, create a corresponding code.
         matcher.addURI(authority, Contracts.PATH_TRAILERS, TRAILERS);
         matcher.addURI(authority, Contracts.PATH_REVIEWS, REVIEWS);
+        matcher.addURI(authority, Contracts.PATH_FAVORITES, FAVORITES);
 
         return matcher;
     }
@@ -92,7 +117,7 @@ public class Provider extends ContentProvider {
     }
 
     @Override
-    public String getType(Uri uri) {
+    public String getType(@NonNull Uri uri) {
 
         // Use the Uri Matcher to determine what kind of URI this is.
         final int match = sUriMatcher.match(uri);
@@ -103,13 +128,15 @@ public class Provider extends ContentProvider {
                 return Contracts.TrailersEntry.CONTENT_TYPE;
             case REVIEWS:
                 return Contracts.ReviewsEntry.CONTENT_TYPE;
+            case FAVORITES:
+                return Contracts.FavoritesEntry.CONTENT_TYPE;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
     }
 
     @Override
-    public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs,
+    public Cursor query(@NonNull Uri uri, String[] projection, String selection, String[] selectionArgs,
                         String sortOrder) {
         // Here's the switch statement that, given a URI, will determine what kind of request it is,
         // and query the database accordingly.
@@ -125,6 +152,11 @@ public class Provider extends ContentProvider {
                 retCursor = getReview(uri, projection, selection, selectionArgs, sortOrder);
                 break;
             }
+            case FAVORITES:
+            {
+                retCursor = getFavorite(uri, projection, selection, selectionArgs, sortOrder);
+                break;
+            }
           default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -133,7 +165,7 @@ public class Provider extends ContentProvider {
     }
 
     @Override
-    public Uri insert(Uri uri, ContentValues values) {
+    public Uri insert(@NonNull Uri uri, ContentValues values) {
         final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
         final int match = sUriMatcher.match(uri);
         Uri returnUri;
@@ -155,6 +187,14 @@ public class Provider extends ContentProvider {
                     throw new android.database.SQLException("Failed to insert row into " + uri);
                 break;
             }
+            case FAVORITES: {
+                long _id = db.insert(Contracts.FavoritesEntry.TABLE_NAME, null, values);
+                if ( _id > 0 )
+                    returnUri = Contracts.FavoritesEntry.buildFavoritesUri(_id);
+                else
+                    throw new android.database.SQLException("Failed to insert row into " + uri);
+                break;
+            }
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -163,7 +203,7 @@ public class Provider extends ContentProvider {
     }
 
     @Override
-    public int delete(Uri uri, String selection, String[] selectionArgs) {
+    public int delete(@NonNull Uri uri, String selection, String[] selectionArgs) {
         final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
         final int match = sUriMatcher.match(uri);
         Log.v("Provider delete", "" + match);
@@ -179,6 +219,10 @@ public class Provider extends ContentProvider {
                 rowsDeleted = db.delete(
                         Contracts.ReviewsEntry.TABLE_NAME, selection, selectionArgs);
                 break;
+            case FAVORITES:
+                rowsDeleted = db.delete(
+                        Contracts.FavoritesEntry.TABLE_NAME, selection, selectionArgs);
+                break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -191,7 +235,7 @@ public class Provider extends ContentProvider {
 
    @Override
     public int update(
-            Uri uri, ContentValues values, String selection, String[] selectionArgs) {
+            @NonNull Uri uri, ContentValues values, String selection, String[] selectionArgs) {
         final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
         final int match = sUriMatcher.match(uri);
         int rowsUpdated;
@@ -203,6 +247,10 @@ public class Provider extends ContentProvider {
                 break;
             case REVIEWS:
                 rowsUpdated = db.update(Contracts.ReviewsEntry.TABLE_NAME, values, selection,
+                        selectionArgs);
+                break;
+            case FAVORITES:
+                rowsUpdated = db.update(Contracts.FavoritesEntry.TABLE_NAME, values, selection,
                         selectionArgs);
                 break;
             default:

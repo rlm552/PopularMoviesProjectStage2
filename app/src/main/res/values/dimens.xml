@@ -6,4 +6,14 @@
     <dimen name="text_margin">16dp</dimen>
 
     <dimen name="activity_width">300dp</dimen>
+
+    <dimen name="large_text_size">32sp</dimen>
+    <dimen name="medium_text_size">24sp</dimen>
+    <dimen name="small_text_size">16sp</dimen>
+
+    <dimen name="min_title_height">120dp</dimen>
+    <dimen name="release_date_width">100dp</dimen>
+    <dimen name="vote_average_width">60dp</dimen>
+
+    <dimen name="trailer_button_width">280dp</dimen>
 </resources>

@@ -6,7 +6,7 @@
     android:paddingTop="20dp">
 
     <TextView
-        android:layout_width="@dimen/activity_width"
+        android:layout_width="@dimen/trailer_button_width"
         android:layout_height="wrap_content"
         android:minHeight="50dp"
         android:id="@+id/trailer_button"
@@ -14,6 +14,7 @@
         style="@android:style/TextAppearance.Medium"
         android:fontFamily="sans-serif"
         android:textStyle="bold"
+        android:textSize="@dimen/medium_text_size"
         android:gravity="center"/>
 
 </LinearLayout>

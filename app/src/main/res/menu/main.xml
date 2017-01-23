@@ -10,7 +10,7 @@
             android:title="@string/menu_option_1"
             app:showAsAction="never"/>
         <item android:id="@+id/favorite_option"
-            android:title="Favorites"
+            android:title="@string/menu_option_3"
             app:showAsAction="never"/>
     </group>
 

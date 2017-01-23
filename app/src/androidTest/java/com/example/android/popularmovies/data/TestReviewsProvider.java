@@ -16,7 +16,7 @@ import android.util.Log;
  */
 public class TestReviewsProvider extends AndroidTestCase {
 
-    public static final String LOG_TAG = TestReviewsProvider.class.getSimpleName();
+    private static final String LOG_TAG = TestReviewsProvider.class.getSimpleName();
 
     /*
        This helper function deletes all records from both database tables using the ContentProvider.
@@ -27,7 +27,7 @@ public class TestReviewsProvider extends AndroidTestCase {
        the delete functionality in the ContentProvider.
      */
 
-    public  void deleteAllRecordsFromProvider(){
+    private void deleteAllRecordsFromProvider(){
         int rowsDeleted = mContext.getContentResolver().delete(
                 Contracts.ReviewsEntry.CONTENT_URI,
                 null,
@@ -47,7 +47,7 @@ public class TestReviewsProvider extends AndroidTestCase {
         cursor.close();
     }
 
-    public void deleteAllRecords() {
+    private void deleteAllRecords() {
         deleteAllRecordsFromProvider();
     }
 
@@ -59,7 +59,6 @@ public class TestReviewsProvider extends AndroidTestCase {
 
     /*
         This test checks to make sure that the content provider is registered correctly.
-        Students: Uncomment this test to make sure you've correctly registered the WeatherProvider.
      */
 
     public  void testProviderRegistry() {
@@ -92,7 +91,7 @@ public class TestReviewsProvider extends AndroidTestCase {
         // content://com.example.android.popularmovies/reviews
         String type = mContext.getContentResolver().getType(Contracts.ReviewsEntry.CONTENT_URI);
         // vnd.android.cursor.dir/com.example.android.popularmovies/reviews
-        assertEquals("Error: the ReviewsEntry CONTENT_URI should return ReviewsEntry.CONTENT_TYPE",
+        assertEquals("Error: the Reviews Entry CONTENT_URI should return ReviewsEntry.CONTENT_TYPE",
                 Contracts.ReviewsEntry.CONTENT_TYPE, type);
     }
 
@@ -175,10 +174,12 @@ public class TestReviewsProvider extends AndroidTestCase {
         TestUtilities.validateCursor("testUpdateReviews.  Error validating reviews entry update.",
                 cursor, updatedValues);
 
+        deleteAllRecords();
+
         cursor.close();
     }
 
-    public void testInsertReadProvider() {
+    private void testInsertReadProvider() {
         ContentValues testValues = TestUtilities.createReviewsValues();
 
         // Register a content observer for our insert.  This time, directly with the content resolver

@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<GridView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/gridView1"
+<fragment xmlns:android="http://schemas.android.com/apk/res/android"
+    android:name="com.example.android.popularmovies.MainFragment"
+    android:id="@+id/main_fragment"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:numColumns="2"
-    android:gravity="center"
-    android:stretchMode="columnWidth">
-</GridView>
+    android:layout_height="match_parent" />
+
+
 

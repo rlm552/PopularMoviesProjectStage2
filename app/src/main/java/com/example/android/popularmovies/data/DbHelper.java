@@ -7,9 +7,9 @@ import android.database.sqlite.SQLiteOpenHelper;
 /**
  * Created by Rory on 11/26/2016.
  */
-public class DbHelper extends SQLiteOpenHelper {
+class DbHelper extends SQLiteOpenHelper {
     // If you change the database schema, you must increment the database version.
-    private static final int DATABASE_VERSION = 9;
+    private static final int DATABASE_VERSION = 11;
 
     static final String DATABASE_NAME = "movies.db";
 
@@ -36,9 +36,21 @@ public class DbHelper extends SQLiteOpenHelper {
                 Contracts.ReviewsEntry.COLUMN_REVIEW_BUTTON + " TEXT NOT NULL" +
                 " );";
 
+        // Create a table to hold favorites.
+        final String SQL_CREATE_FAVORITES_TABLE = "CREATE TABLE " + Contracts.FavoritesEntry.TABLE_NAME + " (" +
+                Contracts.FavoritesEntry._ID + " INTEGER PRIMARY KEY," +
+                Contracts.FavoritesEntry.COLUMN_MOVIE_ID + " INTEGER UNIQUE NOT NULL , " +
+                Contracts.FavoritesEntry.COLUMN_TITLE + " TEXT NOT NULL , " +
+                Contracts.FavoritesEntry.COLUMN_POSTER_PATH + " TEXT UNIQUE NOT NULL , " +
+                Contracts.FavoritesEntry.COLUMN_OVERVIEW + " TEXT UNIQUE NOT NULL , " +
+                Contracts.FavoritesEntry.COLUMN_VOTE_AVERAGE + " TEXT NOT NULL , " +
+                Contracts.FavoritesEntry.COLUMN_RELEASE_DATE + " TEXT NOT NULL " +
+                " );";
+
 
         sqLiteDatabase.execSQL(SQL_CREATE_TRAILERS_TABLE);
         sqLiteDatabase.execSQL(SQL_CREATE_REVIEWS_TABLE);
+        sqLiteDatabase.execSQL(SQL_CREATE_FAVORITES_TABLE);
     }
 
     @Override
@@ -51,6 +63,7 @@ public class DbHelper extends SQLiteOpenHelper {
         // should be your top priority before modifying this method.
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + Contracts.TrailersEntry.TABLE_NAME);
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + Contracts.ReviewsEntry.TABLE_NAME);
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + Contracts.FavoritesEntry.TABLE_NAME);
         onCreate(sqLiteDatabase);
     }
 }
